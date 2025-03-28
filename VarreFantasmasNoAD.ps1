@@ -12,6 +12,9 @@
   Requer: Permissões de leitura no AD
 #>
 
+# Configura o console para UTF-8
+chcp 65001 > $null
+
 # Verifica se o módulo ActiveDirectory está disponível e o importa
 if (-not (Get-Module -ListAvailable -Name ActiveDirectory)) {
     Write-Warning "O módulo ActiveDirectory não foi encontrado. Instale o RSAT ou o módulo apropriado."
@@ -62,13 +65,13 @@ switch ($escolha) {
     "1" {
         Write-Host ""
         $usuariosInativos | Format-Table Name, SamAccountName, LastLogonDate -AutoSize
+        Read-Host "Pressione Enter para sair"
     }
     "2" {
         $pastaRelatorio = "C:\AD_Relatorios"
         if (-not (Test-Path -Path $pastaRelatorio)) {
             New-Item -Path $pastaRelatorio -ItemType Directory | Out-Null
         }
-
         $nomeArquivo = "UsuariosInativos_ativos_${diasInt}dias.csv"
         $caminhoArquivo = Join-Path -Path $pastaRelatorio -ChildPath $nomeArquivo
 
@@ -80,9 +83,11 @@ switch ($escolha) {
         } catch {
             Write-Warning "Erro ao exportar o arquivo: $_"
         }
+        Read-Host "Pressione Enter para sair"
     }
     default {
         Write-Warning "Opção inválida. Nenhuma ação realizada."
+        Read-Host "Pressione Enter para sair"
     }
 }
 
